@@ -4,7 +4,32 @@ function calculate() {
 // let, p = 11, q = 13 ⇒ n = 143, l = 120
 var p = document.getElementById("p").value;
 var q = document.getElementById("q").value;
-if (!(validatePrime(p, "P") && validatePrime(q, "Q"))) {
+if (isNaN(p) || isNaN(q) || p <= 8 || q <= 7) {
+    var errorMessage = "";
+    if (isNaN(p) || p <= 8) {
+        errorMessage += "P should be a numeric value and greater than 8. The entered value " + p + " is not greater than 8.\n";
+    } else if (isNaN(q) || q <= 7) {
+        errorMessage += "Q should be a numeric value greater than 7. The entered value " + q + " is not greater than 7.\n";
+    }
+
+    alert(errorMessage);
+    document.getElementById("p").value = "";  
+    document.getElementById("q").value = "";  
+    document.getElementById("p").value = "";  // Reset P input
+        document.getElementById("q").value = "";  // Reset Q input
+        document.getElementById("n").value = "";  // Reset N input
+        document.getElementById("l").value = "";  // Reset L input
+        document.getElementById("e").value = "";  // Reset E input
+        document.getElementById("d").value = "";  // Reset D input
+        document.getElementById("encryption-keys").innerHTML = "";  // Clear encryption keys display
+        document.getElementById("decryption-keys").innerHTML = "";  // Clear decryption keys display
+        document.getElementById("public-key").innerHTML = "";  // Clear public key display
+        document.getElementById("private-key").innerHTML = "";  // Clear private key display
+        document.getElementById("encrypted-message").innerHTML = "";  // Clear encrypted message display
+        document.getElementById("encrypted-message-textbox").value = "";  // Clear encrypted message textbox
+        document.getElementById("decrypted-message").innerHTML = "";  // Clear decrypted message display
+    return;
+} else if (!(validatePrime(p, "P") && validatePrime(q, "Q"))) {
     return;
 }
 n = p * q;
@@ -103,7 +128,22 @@ function decryptMessage() {
 }
 function validatePrime(prime, nameOfPrime) {
     if (!isPrime(prime)) {
-        document.getElementById("not-prime").innerHTML = "<span class='color-black'>Enter only prime numbers for P & Q:</span> Here, " + nameOfPrime + " is not a Prime Number!<br><span class='color-dark-silver'><em>Reload the page and enter the specified inputs.</em></span>";
+        alert(nameOfPrime + " should be a prime number. The entered value " + prime + " is not prime.");
+        document.getElementById("p").value = "";
+        document.getElementById("q").value = "";
+        document.getElementById("p").value = "";  // Reset P input
+        document.getElementById("q").value = "";  // Reset Q input
+        document.getElementById("n").value = "";  // Reset N input
+        document.getElementById("l").value = "";  // Reset L input
+        document.getElementById("e").value = "";  // Reset E input
+        document.getElementById("d").value = "";  // Reset D input
+        document.getElementById("encryption-keys").innerHTML = "";  // Clear encryption keys display
+        document.getElementById("decryption-keys").innerHTML = "";  // Clear decryption keys display
+        document.getElementById("public-key").innerHTML = "";  // Clear public key display
+        document.getElementById("private-key").innerHTML = "";  // Clear private key display
+        document.getElementById("encrypted-message").innerHTML = "";  // Clear encrypted message display
+        document.getElementById("encrypted-message-textbox").value = "";  // Clear encrypted message textbox
+        document.getElementById("decrypted-message").innerHTML = "";  // Clear decrypted message display
         return false;
     }
     return true;
