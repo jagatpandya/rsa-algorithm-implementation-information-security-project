@@ -1,11 +1,20 @@
+/*
+   This JavaScript code implements the steps for finding encryption/decryption keys and generating
+   public-private key pairs. It builds upon multiple code snippets sourced from a Medium article,
+   all of which have been reengineered and modified for this implementation.
+   Note: The original Medium blog is currently not indexed by search engines.
+*/
 "use strict";
+
 let n, l, e, d;
-const MAX_DECRYPTION_KEYS = 5;
 const MAX_ENCRYPTION_KEYS = 5;
+const MAX_DECRYPTION_KEYS = 5;
+
 function calculate() {
 // Let, p = 11, q = 13 ⇒ n = 143, l = 120
 var p = document.getElementById("p").value;
 var q = document.getElementById("q").value;
+
 // Check if p is a numeric value and greater than 8
 if (isNaN(p) || p <= 8) {
     var errorMessage = "P should be a numeric value and greater than 8. ";
@@ -18,6 +27,7 @@ if (isNaN(p) || p <= 8) {
     resetForm();
     return;
 }
+
 // Check if q is a numeric value and greater than 7
 if (isNaN(q) || q <= 7) {
     var errorMessage = "Q should be a numeric value greater than 7. ";
@@ -30,24 +40,30 @@ if (isNaN(q) || q <= 7) {
     resetForm();
     return;
 }
+
 // Check if both p and q are prime
 if (!(validatePrime(p, "P") && validatePrime(q, "Q"))) {
     return;
 }
+
 n = p * q;
 document.getElementById("n").value = n;
 l = (p - 1) * (q - 1);
 document.getElementById("l").value = l;
+
 // ek = [7,17,19,23,29,31]
 var ek = findEncryptionKeys(n, l);
+
 // ek[0] = 7 ⇒ e = 7
 document.getElementById("e").value = ek[0];
 document.getElementById("encryption-keys").innerHTML = "<span class='color-black'>Possible encryption keys are: </span>" + ek.join(', ');
 encryptionKeyChanged();
 }
+
 function findEncryptionKeys(n, l) {
     var ek = [];
-    // a number between 1 and l that is coprime with n and l
+
+    // A number between 1 and l that is coprime with n and l
     for (var i = 2; i < l; i++) {
         if (isCoPrime(i, n) && isCoPrime(i, l)) {
             ek.push(i);
@@ -58,43 +74,52 @@ function findEncryptionKeys(n, l) {
     }
     return ek;
 }
-// the default first encryption key can be replaced with one of the other possible keys
+
+// The default first encryption key can be replaced with one of the other possible keys
 function encryptionKeyChanged() {
-    e = document.getElementById("e").value;   
+    e = document.getElementById("e").value;  
+
     // dk = [223,343,463,583,703,823]
     var dk = findDecryptionKeys(l, e);
+    
     /* dk.splice(dk.indexOf(e), 1):
        → indexOf(): returns -1 if the value is not found   
        dk.indexOf(e) = -1 (∵ value of e is not found)
        dk.splice(-1, 1) (removes the last element from an array)
        dk = [223,343,463,583,703] */
     dk.splice(dk.indexOf(e), 1); 
+    
     // dk[0] = 223 ⇒ d = 223
     d = dk[0];
     document.getElementById("d").value = d;
     document.getElementById("decryption-keys").innerHTML = "<span class='color-black'>Possible decryption keys are: </span>" + dk.join(', ');
-    /* public key (e, n): (7, 143)
-       private key (d, n): (223, 143) */
+    
+    /* Public key (e, n): (7, 143)
+       Private key (d, n): (223, 143) */
     document.getElementById("public-key").innerHTML = "(" + e + ", " + n + ")";
     document.getElementById("private-key").innerHTML = "(" + d + ", " + n + ")";
 }
+
 function findDecryptionKeys(l, e) {
     var dk = [];
     for (var d = l + 1; d < l + 100000 && dk.length <= MAX_DECRYPTION_KEYS; d++) {
-        // remainder of the product of d and e when divided by l should be 1
+        // Remainder of the product of d and e when divided by l should be 1
         if ((d * e) % l === 1) {
             dk.push(d);
         }
     }
     return dk;
 }
-// the default first decryption key can be replaced with one of the other possible keys
+
+// The default first decryption key can be replaced with one of the other possible keys
 function decryptionKeyChanged() {
     d = document.getElementById("d").value;
     document.getElementById("private-key").innerHTML = "(" + d + ", " + n + ")";
 }
+
 function encryptMessage() {
     var message = document.getElementById("message").value;
+    
     /* message = Ravindra Mevada
        Array.from(Array(message.length).keys()).map(i => message.charCodeAt(i)):
        → from(): returns an array from any object with a length property or from any iterable object
@@ -103,6 +128,7 @@ function encryptMessage() {
        Array.from(Array(message.length).keys()) = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
        Array.from(Array(message.length).keys()).map(i => message.charCodeAt(i)) = [82,97,118,105,110,100,114,97,32,77,101,118,97,100,97] */
     var m = Array.from(Array(message.length).keys()).map(i => message.charCodeAt(i));
+    
     /* m.map(i => modularExponentiation(i, e, n)): (encryption)
        → modularExponentiation(i, e, n): calculates encrypted message (c) = (message (m) ^ e) % n [(base ^ exponent) % modulus]
        m.map(i => modularExponentiation(i, e, n)) = [69,59,79,118,33,100,49,59,98,77,62,79,59,100,59] */
@@ -110,14 +136,17 @@ function encryptMessage() {
     document.getElementById("encrypted-message").innerHTML = c.join(", ");
     document.getElementById("encrypted-message-textbox").value = c.join(", ");
 }
+
 function decryptMessage() {
     // c = [69,59,79,118,33,100,49,59,98,77,62,79,59,100,59]
     var c = stringToNumberArray(document.getElementById("encrypted-message-textbox").value);
+    
     /* c.map(i => modularExponentiation(i, d, n)): (decryption)
        → modularExponentiation(i, d, n): calculates decrypted Message (m) = (encrypted Message (c) ^ d) % n [(base ^ exponent) % modulus]
        c.map(i => modularExponentiation(i, d, n)) = [82,97,118,105,110,100,114,97,32,77,101,118,97,100,97] */
     var m = c.map(i => modularExponentiation(i, d, n));
     var message = "";
+    
     /* m.map(x => message += String.fromCharCode(x)):
        → fromCharCode(): returns a string created from the specified sequence of UTF-16 code units
        m.map(x => message += String.fromCharCode(x)): message = R,Ra,Rav,Ravi,Ravin,Ravind,Ravindr,Ravindra,Ravindra ,Ravindra M,Ravindra Me,Ravindra Mev,Ravindra Meva,Ravindra Mevad,Ravindra Mevada 
@@ -129,14 +158,14 @@ function validatePrime(prime, nameOfPrime) {
     if (!isPrime(prime)) {
         var primeList = "11, 13, 17, 19, 23, 29, 31, 37, 41, 43";
         alert(nameOfPrime + " should be a prime number. The entered value " + prime + " is not prime.\n" +
-            "Some prime numbers: " + primeList);
+            "For example, you might pick from the following list of prime numbers: " + primeList);
         resetForm();
         return false;
     }
     return true;
 }
 function isPrime(num) {
-    // ✓ why do we check up to the square root of a number to determine if the number is prime...
+    // ✓ Why do we check up to the square root of a number to determine if the number is prime...
     let sqrtNum = Math.sqrt(num);
     for (let i = 2; i <= sqrtNum; i++) {
         if (num % i === 0) {
@@ -145,6 +174,7 @@ function isPrime(num) {
     }
     return num !== 1;
 }
+
 function isCoPrime(a, b) {
     /*
     here, n = 143 and l = 120
@@ -171,8 +201,10 @@ function isCoPrime(a, b) {
     */
 	// here, i = 31 ⇒ a = 31: aFac = [31]
 	var aFac = findFactors(a);
+
 	// here, n = 143 ⇒ b = 143: bFac = [11,13,143]
 	var bFac = findFactors(b);
+
 	/* 
     aFac.every(x => bFac.indexOf(x) < 0):
     → every(): executes a function for each array element
@@ -187,6 +219,7 @@ function isCoPrime(a, b) {
 	var result = aFac.every(x => bFac.indexOf(x) < 0);
 	return result;
 }              
+
 function findFactors(num) {
     /*
     here, n = 143 and l = 120 
@@ -229,6 +262,7 @@ function findFactors(num) {
 	result.push(num);
 	return result;
 }
+
 function modularExponentiation(base, exponent, modulus) {
 	/*
     encrypted message (c) = (message (m) ^ e) % n (encryption)
@@ -269,14 +303,15 @@ function modularExponentiation(base, exponent, modulus) {
 	}
 	return result;
 }
+
 function stringToNumberArray(str) {
     /* str.split(",").map(i => parseInt(i)):
        str = 69, 59, 79, 118, 33, 100, 49, 59, 98, 77, 62, 79, 59, 100, 59
        str.split(",").map(i => parseInt(i)) = [69,59,79,118,33,100,49,59,98,77,62,79,59,100,59] */
     return str.split(",").map(i => parseInt(i));
 }
-function resetForm() {
-    // Reset form elements and clear displays
+
+function reset() {
     document.getElementById("p").value = "";
     document.getElementById("q").value = "";
     document.getElementById("n").value = "";
