@@ -1,35 +1,37 @@
 "use strict";
 let n, l, e, d;
+const MAX_DECRYPTION_KEYS = 5;
+const MAX_ENCRYPTION_KEYS = 5;
 function calculate() {
-// let, p = 11, q = 13 ⇒ n = 143, l = 120
+// Let, p = 11, q = 13 ⇒ n = 143, l = 120
 var p = document.getElementById("p").value;
 var q = document.getElementById("q").value;
-if (isNaN(p) || isNaN(q) || p <= 8 || q <= 7) {
-    var errorMessage = "";
-    if (isNaN(p) || p <= 8) {
-        errorMessage += "P should be a numeric value and greater than 8. The entered value " + p + " is not greater than 8.\n";
-    } else if (isNaN(q) || q <= 7) {
-        errorMessage += "Q should be a numeric value greater than 7. The entered value " + q + " is not greater than 7.\n";
+// Check if p is a numeric value and greater than 8
+if (isNaN(p) || p <= 8) {
+    var errorMessage = "P should be a numeric value and greater than 8. ";
+    if (isNaN(p)) {
+        errorMessage += "The entered value for P is not a numeric value.";
+    } else {
+        errorMessage += "The entered value " + p + " is not greater than 8.";
     }
-
     alert(errorMessage);
-    document.getElementById("p").value = "";  
-    document.getElementById("q").value = "";  
-    document.getElementById("p").value = "";  // Reset P input
-        document.getElementById("q").value = "";  // Reset Q input
-        document.getElementById("n").value = "";  // Reset N input
-        document.getElementById("l").value = "";  // Reset L input
-        document.getElementById("e").value = "";  // Reset E input
-        document.getElementById("d").value = "";  // Reset D input
-        document.getElementById("encryption-keys").innerHTML = "";  // Clear encryption keys display
-        document.getElementById("decryption-keys").innerHTML = "";  // Clear decryption keys display
-        document.getElementById("public-key").innerHTML = "";  // Clear public key display
-        document.getElementById("private-key").innerHTML = "";  // Clear private key display
-        document.getElementById("encrypted-message").innerHTML = "";  // Clear encrypted message display
-        document.getElementById("encrypted-message-textbox").value = "";  // Clear encrypted message textbox
-        document.getElementById("decrypted-message").innerHTML = "";  // Clear decrypted message display
+    resetForm();
     return;
-} else if (!(validatePrime(p, "P") && validatePrime(q, "Q"))) {
+}
+// Check if q is a numeric value and greater than 7
+if (isNaN(q) || q <= 7) {
+    var errorMessage = "Q should be a numeric value greater than 7. ";
+    if (isNaN(q)) {
+        errorMessage += "The entered value for Q is not a numeric value.";
+    } else {
+        errorMessage += "The entered value " + q + " is not greater than 7.";
+    }
+    alert(errorMessage);
+    resetForm();
+    return;
+}
+// Check if both p and q are prime
+if (!(validatePrime(p, "P") && validatePrime(q, "Q"))) {
     return;
 }
 n = p * q;
@@ -49,10 +51,10 @@ function findEncryptionKeys(n, l) {
     for (var i = 2; i < l; i++) {
         if (isCoPrime(i, n) && isCoPrime(i, l)) {
             ek.push(i);
-            if (ek.length > 5) {
+            if (ek.length >= MAX_ENCRYPTION_KEYS) {
                 break;
             }
-        }   
+        }
     }
     return ek;
 }
@@ -78,13 +80,10 @@ function encryptionKeyChanged() {
 }
 function findDecryptionKeys(l, e) {
     var dk = [];
-    for (var d = l + 1; d < l + 100000; d++) {
+    for (var d = l + 1; d < l + 100000 && dk.length <= MAX_DECRYPTION_KEYS; d++) {
         // remainder of the product of d and e when divided by l should be 1
         if ((d * e) % l === 1) {
             dk.push(d);
-            if (dk.length > 5) {
-                return dk;
-            }
         }
     }
     return dk;
@@ -128,22 +127,10 @@ function decryptMessage() {
 }
 function validatePrime(prime, nameOfPrime) {
     if (!isPrime(prime)) {
-        alert(nameOfPrime + " should be a prime number. The entered value " + prime + " is not prime.");
-        document.getElementById("p").value = "";
-        document.getElementById("q").value = "";
-        document.getElementById("p").value = "";  // Reset P input
-        document.getElementById("q").value = "";  // Reset Q input
-        document.getElementById("n").value = "";  // Reset N input
-        document.getElementById("l").value = "";  // Reset L input
-        document.getElementById("e").value = "";  // Reset E input
-        document.getElementById("d").value = "";  // Reset D input
-        document.getElementById("encryption-keys").innerHTML = "";  // Clear encryption keys display
-        document.getElementById("decryption-keys").innerHTML = "";  // Clear decryption keys display
-        document.getElementById("public-key").innerHTML = "";  // Clear public key display
-        document.getElementById("private-key").innerHTML = "";  // Clear private key display
-        document.getElementById("encrypted-message").innerHTML = "";  // Clear encrypted message display
-        document.getElementById("encrypted-message-textbox").value = "";  // Clear encrypted message textbox
-        document.getElementById("decrypted-message").innerHTML = "";  // Clear decrypted message display
+        var primeList = "11, 13, 17, 19, 23, 29, 31, 37, 41, 43";
+        alert(nameOfPrime + " should be a prime number. The entered value " + prime + " is not prime.\n" +
+            "Some prime numbers: " + primeList);
+        resetForm();
         return false;
     }
     return true;
@@ -287,4 +274,20 @@ function stringToNumberArray(str) {
        str = 69, 59, 79, 118, 33, 100, 49, 59, 98, 77, 62, 79, 59, 100, 59
        str.split(",").map(i => parseInt(i)) = [69,59,79,118,33,100,49,59,98,77,62,79,59,100,59] */
     return str.split(",").map(i => parseInt(i));
+}
+function resetForm() {
+    // Reset form elements and clear displays
+    document.getElementById("p").value = "";
+    document.getElementById("q").value = "";
+    document.getElementById("n").value = "";
+    document.getElementById("l").value = "";
+    document.getElementById("e").value = "";
+    document.getElementById("d").value = "";
+    document.getElementById("encryption-keys").innerHTML = "";
+    document.getElementById("decryption-keys").innerHTML = "";
+    document.getElementById("public-key").innerHTML = "";
+    document.getElementById("private-key").innerHTML = "";
+    document.getElementById("encrypted-message").innerHTML = "";
+    document.getElementById("encrypted-message-textbox").value = "";
+    document.getElementById("decrypted-message").innerHTML = "";
 }
