@@ -15,6 +15,12 @@ function calculate() {
 var p = document.getElementById("p").value;
 var q = document.getElementById("q").value;
 
+// Check if p and q are empty
+if (!p || !q) {
+	alert("Please enter values for both P and Q.");
+	return;
+}
+	
 // Check if p is a numeric value and greater than 8
 if (isNaN(p) || p <= 8) {
     var errorMessage = "P should be a numeric value and greater than 8. ";
