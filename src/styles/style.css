@@ -21,7 +21,7 @@ h3 {
 }
 .step-section {
     margin: 10px;
-    padding: 5px; /* check */
+    padding: 5px;
     background-color: #e4e4dc;
     border-radius: 5px;
 }
@@ -64,64 +64,3 @@ input[type=text] {
 .button:hover {
     color: black;
 }
-/*html, body {
-    margin: 0;
-    padding: 0;
-    background-color: #e4e4dc;
-}
-h1 {
-    margin: 15px;
-    padding: 10px;
-    text-align: center;
-    border-radius: 5px;
-    background-color: white;
-}
-.rsa-container {
-    margin: 15px;
-    padding: 10px;
-    border-radius: 5px;
-    background-color: white;
-}
-.step-section {
-    margin: 5px;
-    padding: 15px;
-    border-radius: 5px;
-    background-color: #e4e4dc;
-}
-fieldset {
-    border: 2px solid black;
-}
-table {
-    border: 1px solid black;
-    border-spacing: 0;
-}
-thead, th {
-    border: 1px solid black;
-}
-td {
-    padding: 10px;
-    text-align: center;
-    border: 1px solid black;
-}
-input[type=text] {
-    border: 0; 
-    border-radius: 5px; 
-}
-.button {
-    padding: 5px 20px;
-    border: 2px solid black;
-    border-radius: 5px;
-    color: #666662;
-    text-align: center;
-    font-family: "Times New Roman";
-    font-size: 15px;
-    font-weight: bold;
-    background-color: white;
-    transition-duration: 0.2s;
-}
-.button:hover {
-    color: black;
-}
-p {
-    margin: 10px;
-}*/
