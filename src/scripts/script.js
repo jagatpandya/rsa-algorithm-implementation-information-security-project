@@ -30,7 +30,7 @@ if (isNaN(p) || p <= 8) {
         errorMessage += "The entered value " + p + " is not greater than 8.";
     }
     alert(errorMessage);
-    resetForm();
+    reset();
     return;
 }
 
@@ -43,7 +43,7 @@ if (isNaN(q) || q <= 7) {
         errorMessage += "The entered value " + q + " is not greater than 7.";
     }
     alert(errorMessage);
-    resetForm();
+    reset();
     return;
 }
 
@@ -165,7 +165,7 @@ function validatePrime(prime, nameOfPrime) {
         var primeList = "11, 13, 17, 19, 23, 29, 31, 37, 41, 43";
         alert(nameOfPrime + " should be a prime number. The entered value " + prime + " is not prime.\n" +
             "For example, you might pick from the following list of prime numbers: " + primeList);
-        resetForm();
+        reset();
         return false;
     }
     return true;
