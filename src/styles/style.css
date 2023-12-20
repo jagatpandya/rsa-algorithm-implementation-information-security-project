@@ -2,6 +2,7 @@ html, body {
     margin: 0;
     padding: 0;
     background-color: #e4e4dc;    
+    font-family: 'DejaVu Serif', serif;
 }
 h1 {
     margin: 15px;
